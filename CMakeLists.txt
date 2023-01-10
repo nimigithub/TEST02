@@ -19,17 +19,16 @@ set(GLFW_DIR external/glfw)
 add_subdirectory(${GLFW_DIR})
 add_subdirectory(${GLAD_DIR})
 
-add_library(glad ${GLAD_DIR}/src/glad.c)
-target_include_directories(glad PRIVATE ${GLAD_DIR}/include)
+#add_library(glad ${GLAD_DIR}/src/glad.c)
 
 target_include_directories(${PROJECT_NAME} 
     PUBLIC ${GLFW_DIR}/include
     PRIVATE ${GLAD_DIR}/include
 )
 
-target_link_directories(${PROJECT_NAME} 
-    PUBLIC ${GLFW_DIR}/src
-)
+# target_link_directories(${PROJECT_NAME} 
+#     PUBLIC ${GLFW_DIR}/src
+# )
 
 target_link_libraries(${PROJECT_NAME}
     glfw
