@@ -70,6 +70,7 @@ int main(void)
  
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_SAMPLES, 4);
  
     window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
     if (!window)
@@ -118,6 +119,8 @@ int main(void)
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*) 0);
     glEnableVertexAttribArray(vcol_location);
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*) (sizeof(float) * 2));
+
+    glEnable(GL_MULTISAMPLE);
  
     while (!glfwWindowShouldClose(window))
     {
@@ -131,7 +134,7 @@ int main(void)
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
  
-        mat4x4_identity(m); 
+        mat4x4_identity(m);
         mat4x4_rotate_Z(m, m, (float) glfwGetTime());
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
@@ -150,7 +153,7 @@ int main(void)
 
     cv::Mat mat = (cv::Mat_<float>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
     int matSize = mat.size().area(); 
-    std::cout << matSize << std::endl;
+    std::cout << "Mat size(): " << matSize << std::endl;
     //cv::imshow("Matrix", mat);
     //cv::waitKey(0);
 
