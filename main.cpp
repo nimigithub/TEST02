@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-
+#include <opencv2/opencv.hpp>
 
 #include <glad.h>
 #define GLFW_INCLUDE_NONE
@@ -125,13 +125,13 @@ int main(void)
         int width, height;
         mat4x4 m, p, mvp;
  
-        glfwGetFramebufferSize(window, &width, &height);
+        glfwGetFramebufferSize(window, &width, &height); 
         ratio = width / (float) height;
  
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
  
-        mat4x4_identity(m);
+        mat4x4_identity(m); 
         mat4x4_rotate_Z(m, m, (float) glfwGetTime());
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
@@ -140,124 +140,19 @@ int main(void)
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
         glDrawArrays(GL_TRIANGLES, 0, 3);
  
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(window); 
         glfwPollEvents();
     }
- 
+
     glfwDestroyWindow(window);
  
     glfwTerminate();
-    exit(EXIT_SUCCESS);
+
+    cv::Mat mat = (cv::Mat_<float>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+    int matSize = mat.size().area(); 
+    std::cout << matSize << std::endl;
+    //cv::imshow("Matrix", mat);
+    //cv::waitKey(0);
+
+    return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// #include <iostream>
-// #include <string>
-// #include <vector>
-// #include <glad.h>
-// //#define GLFW_INCLUDE_NONE
-// #include <GLFW/glfw3.h>
-
-// using namespace std;
-
-// void sayHello() {
-//     std::cout << "Hello, World!" << std::endl;
-// }
-
-// static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-// {
-//     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-//         glfwSetWindowShouldClose(window, GL_TRUE);
-// }
-
-// int main(int argc, char* argv[])
-// {
-//     GLFWwindow* window = nullptr;
-//     if (!glfwInit())
-//     {
-//         // Initialization failed
-//         std::cout << "Fatal Error calling glfwInit()" << std::endl;
-//         return -1;
-//     }
-
-//     window = glfwCreateWindow(640, 480, "Simple little example", NULL, NULL);
-
-//     if (!window)
-//     {
-//         glfwTerminate();
-//         exit(EXIT_FAILURE);
-//     }
-    
-//     glfwMakeContextCurrent(window);
-//     glfwSwapInterval(1);
-//     glfwSetKeyCallback(window, key_callback);
-
-//     while (!glfwWindowShouldClose(window))
-//     {
-//         float ratio;
-//         int width, height;
-//         glfwGetFramebufferSize(window, &width, &height);
-//         ratio = width / (float) height;
-//         glViewport(0, 0, width, height);
-//         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//         glClear(GL_COLOR_BUFFER_BIT);
-//         glMatrixMode(GL_PROJECTION);
-//         glLoadIdentity();
-//         glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-//         glMatrixMode(GL_MODELVIEW);
-//         glLoadIdentity();
-//         glRotatef((float) glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-//         glBegin(GL_TRIANGLES);
-//             glColor3f(1.f, 0.f, 0.f);
-//             glVertex3f(-0.6f, -0.4f, 0.f);
-//             glColor3f(0.f, 1.f, 0.f);
-//             glVertex3f(0.6f, -0.4f, 0.f);
-//             glColor3f(0.f, 0.f, 1.f);
-//             glVertex3f(0.f, 0.6f, 0.f);
-//         glEnd();
-
-
-//         glfwSwapBuffers(window);
-//         glfwPollEvents();
-//     }
-
-
-//     // int i = 0;
-//     // vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the c++ extension!"};
-    
-//     // for(string s : msg) {
-//     //     cout << s << " ";
-//     //     i++;
-//     // }
-//     // cout << endl;
-
-//     // sayHello();
-
-//     glfwDestroyWindow(window);
-//     glfwTerminate();
-// }
