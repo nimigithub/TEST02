@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25.1)
+cmake_minimum_required(VERSION 3.22.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -41,8 +41,17 @@ target_link_directories(${PROJECT_NAME}
     PUBLIC ${OPENCV_DIR}/lib
 )
 
+if (WIN32)
 target_link_libraries(${PROJECT_NAME}
     glfw
     glad
     libopencv_core470.dll.a
 )
+else()
+target_link_libraries(${PROJECT_NAME}
+    glfw
+    glad
+    libopencv_core.so.407
+)
+endif()
+
