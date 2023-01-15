@@ -46,15 +46,37 @@ static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
+
+static bool isFullScreen = false;
+static int prev_x, prev_y, prev_width, prev_height;
+
+void toggleFullScreen(GLFWwindow* window) {
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    if (!isFullScreen) {
+        glfwGetWindowPos(window, &prev_x, &prev_y);
+        glfwGetWindowSize(window, &prev_width, &prev_height);
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+        isFullScreen = true;
+    }
+    else {
+        glfwSetWindowMonitor(window, NULL, prev_x, prev_y, prev_width, prev_height, GLFW_DONT_CARE);
+        isFullScreen = false;
+    }
+}
+
  
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     else {
-        std::cout << "key: " << key << " scancode: " << scancode << " action: " << action << " mods: " << mods << std::endl;        
+        //std::cout << "key: " << key << " scancode: " << scancode << " action: " << action << " mods: " << mods << std::endl;        
     }
-    std::cout << "callback exit\n";
+
+    if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {
+        toggleFullScreen(window);
+    }
 }
  
 int main(void)
@@ -135,7 +157,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
  
         mat4x4_identity(m);
-        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+        mat4x4_rotate_Z(m, m, (float) glfwGetTime() * 0.5f);
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
  
@@ -152,7 +174,8 @@ int main(void)
     glfwTerminate();
 
     cv::Mat mat = (cv::Mat_<float>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
-    int matSize = mat.size().area(); 
+    int matSize = mat.size().area();
+    mat.clone();
     std::cout << "Mat size(): " << matSize << std::endl;
     //cv::imshow("Matrix", mat);
     //cv::waitKey(0);

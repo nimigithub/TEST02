@@ -1,4 +1,6 @@
 {
+    "cmake.configureOnOpen": true,
+
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",
