@@ -46,12 +46,16 @@ target_link_libraries(${PROJECT_NAME}
     glfw
     glad
     libopencv_core470.dll.a
+    libopencv_highgui470.dll.a
+    libopencv_imgcodecs470.dll.a
 )
 else()
 target_link_libraries(${PROJECT_NAME}
     glfw
     glad
     libopencv_core.so.407
+    libopencv_highgui.so.407
+    libopencv_imgcodecs.so.407
 )
 endif()
 
