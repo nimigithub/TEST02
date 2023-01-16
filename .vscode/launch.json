@@ -30,8 +30,10 @@
 
         {
             "name": "(gdb) Launch",
+            "externalConsole":false,
             "type": "cppdbg",
             "request": "launch",
+            "stopAtConnect": false,
             // Resolved by CMake Tools:
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
@@ -49,7 +51,6 @@
                     "value": "Something something"
                 }
             ],
-            "console": "externalTerminal",
             "MIMode": "gdb",
             "setupCommands": [
                 {
