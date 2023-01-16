@@ -1,6 +1,11 @@
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <thread>
+#include <unistd.h>
+
 #include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 
 #include <glad.h>
 #define GLFW_INCLUDE_NONE
@@ -78,8 +83,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         toggleFullScreen(window);
     }
 }
- 
-int main(void)
+
+void testOpenGL()
 {
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
@@ -107,7 +112,6 @@ int main(void)
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize OpenGL context" << std::endl;
-        return -1;
     }
 
     //gladLoadGL(glfwGetProcAddress);
@@ -172,13 +176,39 @@ int main(void)
     glfwDestroyWindow(window);
  
     glfwTerminate();
+}
 
-    cv::Mat mat = (cv::Mat_<float>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
-    int matSize = mat.size().area();
-    mat.clone();
-    std::cout << "Mat size(): " << matSize << std::endl;
-    //cv::imshow("Matrix", mat);
-    //cv::waitKey(0);
+void testOpenCV()
+{
+    std::cout << "Running in thread" << std::endl;
+    using namespace cv;
+    Mat image = imread("Lenna.png", 1);
+
+    while (true) {
+        imshow("Window Name", image); // Show our image inside the created window.
+
+        int key = cv::waitKey(16); // Wait for any keystroke in the window
+        if (key == 27) {
+            break;
+        }
+        else {
+            if (key == 'A') {
+                std::cout << "Hi A" << std::endl;
+            }
+        }
+    }
+    cv::destroyAllWindows(); //destroy all window
+}
+ 
+int main(void)
+{
+    std::thread t1([] {
+        testOpenCV();
+    });
+
+    testOpenGL();
+
+    t1.join();
 
     return 0;
 }
