@@ -182,7 +182,7 @@ void testOpenCV()
 {
     std::cout << "Running in thread" << std::endl;
     using namespace cv;
-    Mat image = imread("Lenna.png", 1);
+    Mat image = imread("./Res/Lenna.png", 1);
 
     while (true) {
         imshow("Window Name", image); // Show our image inside the created window.

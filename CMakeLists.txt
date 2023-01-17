@@ -2,6 +2,19 @@ cmake_minimum_required(VERSION 3.22.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build/bin)
+message(STATUS "Source Dir: ${CMAKE_SOURCE_DIR} & Binary Dir: ${CMAKE_BINARY_DIR}")
+
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/Res")
+    #configure_file(${CMAKE_SOURCE_DIR}/Res ${CMAKE_BINARY_DIR}/Res COPYONLY)
+    file(COPY ${CMAKE_SOURCE_DIR}/Res DESTINATION ${CMAKE_BINARY_DIR}/)
+else()
+    message(FATAL_ERROR "The directory Res does not exist.")
+endif()
+
+
 project(TEST02 VERSION 0.1.0)
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -59,3 +72,5 @@ target_link_libraries(${PROJECT_NAME}
 )
 endif()
 
+
+#configure_file(${CMAKE_SOURCE_DIR}/Res ${CMAKE_BINARY_DIR}/Res COPYONLY)
