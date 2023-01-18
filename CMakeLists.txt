@@ -50,13 +50,13 @@ target_include_directories(${PROJECT_NAME}
 ### LINK ####
 
 if (WIN32)
-target_link_libraries(${PROJECT_NAME}
-    glfw
-    glad
-    libopencv_core470.dll.a
-    libopencv_highgui470.dll.a
-    libopencv_imgcodecs470.dll.a
-)
+    target_link_libraries(${PROJECT_NAME}
+        glfw
+        glad
+        opencv_core
+        opencv_highgui
+        opencv_imgcodecs
+    )
 else()
     target_link_libraries(${PROJECT_NAME}
         glfw
