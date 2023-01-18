@@ -2,20 +2,16 @@
 #include <string>
 #include <fstream>
 #include <thread>
-#include <unistd.h>
-
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
-
 #include <glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
- 
 #include "linmath.h"
- 
 #include <stdlib.h>
 #include <stdio.h>
- 
+#include <unistd.h>
+
 static const struct
 {
     float x, y;
@@ -84,16 +80,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-void testOpenGL()
+void thread_func_f2()
 {
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
     GLint mvp_location, vpos_location, vcol_location;
  
     glfwSetErrorCallback(error_callback);
- 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
  
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -102,8 +95,8 @@ void testOpenGL()
     window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
+        std::cout << "glfwCreateWindow() failed" << std::endl;
+        return;
     }
  
     glfwSetKeyCallback(window, key_callback);
@@ -174,18 +167,23 @@ void testOpenGL()
     }
 
     glfwDestroyWindow(window);
- 
-    glfwTerminate();
 }
 
-void testOpenCV()
+void thread_func_f1()
 {
+    std::string windowName = "Lenna";
     std::cout << "Running in thread" << std::endl;
     using namespace cv;
     Mat image = imread("./Res/Lenna.png", 1);
+    Mat resizedImage;
+    cv::resize(image, resizedImage, cv::Size(1920, 1080));
+    bool bFullScreen = false;
 
     while (true) {
-        imshow("Window Name", image); // Show our image inside the created window.
+        if (bFullScreen)
+            imshow(windowName.c_str(), resizedImage); // Show our image inside the created window.
+        else
+            imshow(windowName.c_str(), image); // Show our image inside the created window.
 
         int key = cv::waitKey(16); // Wait for any keystroke in the window
         if (key == 27) {
@@ -195,6 +193,16 @@ void testOpenCV()
             if (key == 'A') {
                 std::cout << "Hi A" << std::endl;
             }
+            if (key == 'F') {
+                cv::setWindowProperty(windowName.c_str(), cv::WND_PROP_FULLSCREEN, WINDOW_FULLSCREEN);
+                std::cout << "Enter Full Screen" << std::endl;
+                bFullScreen = true;
+            }
+            if (key == 'f') {
+                cv::setWindowProperty(windowName.c_str(), cv::WND_PROP_FULLSCREEN, WINDOW_NORMAL);
+                std::cout << "Exit Full Screen" << std::endl;
+                bFullScreen = false;
+            }
         }
     }
     cv::destroyAllWindows(); //destroy all window
@@ -202,13 +210,18 @@ void testOpenCV()
  
 int main(void)
 {
-    std::thread t1([] {
-        testOpenCV();
-    });
+    if (!glfwInit()) { // call once for the whole program
+        std::cout << "glfwInit() failed" << std::endl;
+        return -1;
+    }
 
-    testOpenGL();
+    std::thread t1(thread_func_f1);
+    std::thread t2(thread_func_f2);
 
     t1.join();
+    t2.join();
+
+    glfwTerminate(); // same - terminate once
 
     return 0;
 }
